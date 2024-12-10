@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const app = document.getElementById("app");
-  
-    // Función para renderizar "Quiénes Somos"
-    const renderQuienesSomos = () => {
-      app.innerHTML = `
+  const app = document.getElementById("app");
+
+  const renderQuienesSomos = () => {
+    app.innerHTML = `
         <section id="quienes-somos" class="quienes-somos">
           <h1>¿Quiénes Somos?</h1>
           <p>
@@ -17,13 +16,14 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </section>
       `;
-  
-      document.getElementById("irCotizador").addEventListener("click", renderCotizador);
-    };
-  
-    // Función para renderizar el Cotizador
-    const renderCotizador = () => {
-      app.innerHTML = `
+
+    document
+      .getElementById("irCotizador")
+      .addEventListener("click", renderCotizador);
+  };
+
+  const renderCotizador = () => {
+    app.innerHTML = `
         <h1 class="center separador">Asegurá tu Hogar 🏡</h1>
         <div class="cotizador">
           <h2 class="center separador">Completa los datos solicitados</h2>
@@ -51,69 +51,80 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>
       `;
-  
-      cargarDatos("propiedades", "propiedad");
-      cargarDatos("ubicaciones", "ubicacion");
-  
-      document.getElementById("cotizar").addEventListener("click", cotizar);
-      document.getElementById("guardarHistorial").addEventListener("click", guardarHistorialCotizacion);
-      document.getElementById("verHistorial").addEventListener("click", renderHistorial);
-      document.getElementById("verContacto").addEventListener("click", renderContacto);
-      document.getElementById("volverHome").addEventListener("click", renderQuienesSomos);
-    };
-  
-    // Función para cargar opciones de propiedades y ubicaciones desde una API
-    const cargarDatos = (endpoint, elementoId) => {
-      fetch(`https://653831aaa543859d1bb14d53.mockapi.io/${endpoint}`)
-        .then(res => res.json())
-        .then(data => {
-          const select = document.getElementById(elementoId);
-          data.forEach(item => {
-            const option = document.createElement("option");
-            option.value = item.id;
-            option.textContent = item.tipo;
-            select.appendChild(option);
-          });
-        })
-        .catch(err => alert("Error al cargar datos"));
-    };
-  
-    // Función para cotizar el precio estimado
-    const cotizar = () => {
-      const propiedad = document.getElementById("propiedad").value;
-      const ubicacion = document.getElementById("ubicacion").value;
-      const metros2 = document.getElementById("metros2").value;
-  
-      if (propiedad && ubicacion && metros2 >= 20 && metros2 <= 500) {
-        const costoM2 = 35.9;
-        const cotizacion = (costoM2 * metros2).toFixed(2);
-        document.getElementById("valorPoliza").textContent = cotizacion;
-      } else {
-        alert("Por favor, completa todos los campos correctamente.");
-      }
-    };
-  
-    // Función para guardar el historial de cotizaciones
-    const guardarHistorialCotizacion = () => {
-      const propiedad = document.getElementById("propiedad").value;
-      const ubicacion = document.getElementById("ubicacion").value;
-      const metros2 = document.getElementById("metros2").value;
-      const poliza = document.getElementById("valorPoliza").textContent;
-  
-      if (propiedad && ubicacion && metros2 >= 20 && metros2 <= 500) {
-        const cotizacion = { propiedad, ubicacion, metros2, poliza, fechaCotizacion: new Date().toLocaleString() };
-        const historial = JSON.parse(localStorage.getItem("historialCotizaciones")) || [];
-        historial.push(cotizacion);
-        localStorage.setItem("historialCotizaciones", JSON.stringify(historial));
-        alert("Cotización guardada en el historial.");
-      } else {
-        alert("Por favor, completa todos los campos correctamente.");
-      }
-    };
-  
-    // Función para renderizar el historial de cotizaciones
-    const renderHistorial = () => {
-      app.innerHTML = `
+
+    cargarDatos("propiedades", "propiedad");
+    cargarDatos("ubicaciones", "ubicacion");
+
+    document.getElementById("cotizar").addEventListener("click", cotizar);
+    document
+      .getElementById("guardarHistorial")
+      .addEventListener("click", guardarHistorialCotizacion);
+    document
+      .getElementById("verHistorial")
+      .addEventListener("click", renderHistorial);
+    document
+      .getElementById("verContacto")
+      .addEventListener("click", renderContacto);
+    document
+      .getElementById("volverHome")
+      .addEventListener("click", renderQuienesSomos);
+  };
+
+  const cargarDatos = (endpoint, elementoId) => {
+    fetch(`https://653831aaa543859d1bb14d53.mockapi.io/${endpoint}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const select = document.getElementById(elementoId);
+        data.forEach((item) => {
+          const option = document.createElement("option");
+          option.value = item.id;
+          option.textContent = item.tipo;
+          select.appendChild(option);
+        });
+      })
+      .catch((err) => alert("Error al cargar datos"));
+  };
+
+  const cotizar = () => {
+    const propiedad = document.getElementById("propiedad").value;
+    const ubicacion = document.getElementById("ubicacion").value;
+    const metros2 = document.getElementById("metros2").value;
+
+    if (propiedad && ubicacion && metros2 >= 20 && metros2 <= 500) {
+      const costoM2 = 35.9;
+      const cotizacion = (costoM2 * metros2).toFixed(2);
+      document.getElementById("valorPoliza").textContent = cotizacion;
+    } else {
+      alert("Por favor, completa todos los campos correctamente.");
+    }
+  };
+
+  const guardarHistorialCotizacion = () => {
+    const propiedad = document.getElementById("propiedad").value;
+    const ubicacion = document.getElementById("ubicacion").value;
+    const metros2 = document.getElementById("metros2").value;
+    const poliza = document.getElementById("valorPoliza").textContent;
+
+    if (propiedad && ubicacion && metros2 >= 20 && metros2 <= 500) {
+      const cotizacion = {
+        propiedad,
+        ubicacion,
+        metros2,
+        poliza,
+        fechaCotizacion: new Date().toLocaleString(),
+      };
+      const historial =
+        JSON.parse(localStorage.getItem("historialCotizaciones")) || [];
+      historial.push(cotizacion);
+      localStorage.setItem("historialCotizaciones", JSON.stringify(historial));
+      alert("Cotización guardada en el historial.");
+    } else {
+      alert("Por favor, completa todos los campos correctamente.");
+    }
+  };
+
+  const renderHistorial = () => {
+    app.innerHTML = `
         <h1 class="center separador">Historial de Cotizaciones</h1>
         <table>
           <thead>
@@ -132,35 +143,38 @@ document.addEventListener("DOMContentLoaded", () => {
           <button id="volverCotizador">Volver al Cotizador</button>
         </div>
       `;
-  
-      const historial = JSON.parse(localStorage.getItem("historialCotizaciones")) || [];
-      const tabla = document.getElementById("tablaHistorial");
-  
-      historial.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
+
+    const historial =
+      JSON.parse(localStorage.getItem("historialCotizaciones")) || [];
+    const tabla = document.getElementById("tablaHistorial");
+
+    historial.forEach((item) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
           <td>${item.fechaCotizacion}</td>
           <td>${item.propiedad}</td>
           <td>${item.ubicacion}</td>
           <td>${item.metros2}</td>
           <td>${item.poliza}</td>
         `;
-        tabla.appendChild(row);
-      });
-  
-      // Limpiar historial
-      document.getElementById("limpiarHistorial").addEventListener("click", () => {
+      tabla.appendChild(row);
+    });
+
+    document
+      .getElementById("limpiarHistorial")
+      .addEventListener("click", () => {
         localStorage.removeItem("historialCotizaciones");
         alert("Historial limpiado correctamente.");
         renderHistorial(); // Refrescar la vista después de limpiar
       });
-  
-      document.getElementById("volverCotizador").addEventListener("click", renderCotizador);
-    };
-  
-    // Función para renderizar el formulario de contacto con validación
-    const renderContacto = () => {
-      app.innerHTML = `
+
+    document
+      .getElementById("volverCotizador")
+      .addEventListener("click", renderCotizador);
+  };
+
+  const renderContacto = () => {
+    app.innerHTML = `
         <h1>Formulario de Contacto</h1>
         <form id="contactForm">
           <label for="nombre">Nombre:</label>
@@ -183,54 +197,51 @@ document.addEventListener("DOMContentLoaded", () => {
           <button id="volverCotizador">Volver al Cotizador</button>
         </div>
       `;
-  
-      // Validar el formulario de contacto
-      document.getElementById("contactForm").addEventListener("submit", (event) => {
+
+    document
+      .getElementById("contactForm")
+      .addEventListener("submit", (event) => {
         event.preventDefault();
-  
+
         const nombre = document.getElementById("nombre").value;
         const email = document.getElementById("email").value;
         const telefono = document.getElementById("telefono").value;
         const mensaje = document.getElementById("mensaje").value;
-  
+
         let valid = true;
-  
-        // Validar Nombre
+
         if (nombre.trim() === "") {
           alert("El nombre es obligatorio.");
           valid = false;
         }
-  
-        // Validar Email
+
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(email)) {
           alert("Por favor, ingresa un correo electrónico válido.");
           valid = false;
         }
-  
-        // Validar Teléfono
-        const telefonoRegex = /^\+?[0-9]{1,4}?[-.\\s]?[0-9]+[-.\\s]?[0-9]+[-.\\s]?[0-9]+$/;
+
+        const telefonoRegex =
+          /^\+?[0-9]{1,4}?[-.\\s]?[0-9]+[-.\\s]?[0-9]+[-.\\s]?[0-9]+$/;
         if (!telefonoRegex.test(telefono)) {
           alert("Por favor, ingresa un número de teléfono válido.");
           valid = false;
         }
-  
-        // Validar Mensaje
+
         if (mensaje.trim() === "") {
           alert("El mensaje no puede estar vacío.");
           valid = false;
         }
-  
+
         if (valid) {
           alert("Formulario enviado correctamente.");
-          // Aquí podrías agregar el código para enviar el formulario con fetch o cualquier otra acción.
         }
       });
-  
-      document.getElementById("volverCotizador").addEventListener("click", renderCotizador);
-    };
-  
-    // Iniciar con la pantalla de "Quiénes Somos"
-    renderQuienesSomos();
-  });
-  
+
+    document
+      .getElementById("volverCotizador")
+      .addEventListener("click", renderCotizador);
+  };
+
+  renderQuienesSomos();
+});
